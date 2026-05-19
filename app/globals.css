@@ -1,0 +1,495 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-sand: #fdfbf7;
+  --color-sand-light: #ffffff;
+  --color-clay: #c5a059;
+  --color-clay-dark: #a68a4b;
+  --color-earth: #1c1c1b;
+  --color-charcoal: #111111;
+  --color-cream: #f9f8f4;
+  --color-warm-white: #ffffff;
+  --color-stone: #a8a8a8;
+  --color-sage: #9ca3af;
+  --color-terracotta: #d4af37;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-clay) var(--color-sand);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-sand);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-clay);
+  border-radius: 999px;
+}
+
+::selection {
+  background: rgba(197, 160, 89, 0.2);
+  color: var(--color-earth);
+}
+
+body {
+  background-color: var(--color-warm-white);
+  color: var(--color-earth);
+  font-family: var(--font-dm, "DM Sans"), system-ui, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+/* Film grain overlay - lightened for gold theme */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+main {
+  background-color: var(--color-warm-white);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(197, 160, 89, 0.6);
+  outline-offset: 3px;
+}
+
+/* ---------- Navbar States ---------- */
+.terra-navbar {
+  background: transparent;
+  color: var(--color-cream);
+  border-bottom: 1px solid transparent;
+  transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, color 0.5s ease;
+}
+
+.terra-nav-solid {
+  background: rgba(255, 255, 255, 0.98);
+  color: var(--color-charcoal);
+  border-color: rgba(197, 160, 89, 0.15);
+  box-shadow: 0 10px 40px rgba(197, 160, 89, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.terra-nav-solid .terra-nav-logo {
+  color: var(--color-clay-dark);
+}
+
+.terra-nav-solid .terra-nav-link {
+  color: var(--color-charcoal);
+}
+
+.terra-nav-solid .terra-nav-cta {
+  color: var(--color-clay-dark);
+  border-color: var(--color-clay);
+}
+
+.terra-nav-solid .terra-hamburger span {
+  background-color: var(--color-clay-dark);
+}
+
+/* ---------- Utilities ---------- */
+.terra-will-change {
+  will-change: transform, opacity;
+}
+
+/* Scroll hint animation */
+.scroll-hint-line {
+  width: 1px;
+  height: 36px;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, var(--color-sand), transparent);
+  animation: scrollLineDown 1.8s ease-in-out infinite;
+}
+
+@keyframes scrollLineDown {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  40% {
+    opacity: 1;
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  80% {
+    opacity: 0;
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+/* Card hover shimmer */
+.terra-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.terra-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(196, 148, 106, 0.04) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.terra-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 40px 100px rgba(45, 35, 27, 0.14);
+}
+
+.terra-card:hover::before {
+  opacity: 1;
+}
+
+/* Floor plan card badge */
+.terra-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+}
+
+/* Input underline focus */
+.terra-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(196, 148, 106, 0.35);
+  outline: none;
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--color-earth);
+  width: 100%;
+  font-family: var(--font-dm, "DM Sans"), system-ui, sans-serif;
+  transition: border-color 0.3s ease;
+}
+
+.terra-input:focus {
+  border-bottom-color: var(--color-clay);
+}
+
+.terra-input::placeholder {
+  color: rgba(61, 43, 31, 0.35);
+  font-size: 13px;
+}
+
+/* Decorative divider */
+.terra-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.terra-divider::before,
+.terra-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-clay);
+  opacity: 0.25;
+}
+
+/* Corner frame decoration */
+.terra-corner {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  pointer-events: none;
+}
+.terra-corner--tl {
+  top: 28px;
+  left: 28px;
+  border-top: 1.5px solid rgba(197, 160, 89, 0.35);
+  border-left: 1.5px solid rgba(197, 160, 89, 0.35);
+}
+.terra-corner--tr {
+  top: 28px;
+  right: 28px;
+  border-top: 1.5px solid rgba(197, 160, 89, 0.35);
+  border-right: 1.5px solid rgba(197, 160, 89, 0.35);
+}
+.terra-corner--bl {
+  bottom: 28px;
+  left: 28px;
+  border-bottom: 1.5px solid rgba(197, 160, 89, 0.35);
+  border-left: 1.5px solid rgba(197, 160, 89, 0.35);
+}
+.terra-corner--br {
+  bottom: 28px;
+  right: 28px;
+  border-bottom: 1.5px solid rgba(197, 160, 89, 0.35);
+  border-right: 1.5px solid rgba(197, 160, 89, 0.35);
+}
+
+.sr-only {
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+/* Premium Text Glow */
+.terra-text-glow {
+  text-shadow:
+    0 0 50px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(232, 220, 200, 0.2),
+    0 2px 15px rgba(0, 0, 0, 0.8);
+}
+
+/* CTA Shine Effect */
+.terra-btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.terra-btn-shine::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  transform: rotate(45deg);
+  animation: btnShine 4s infinite;
+}
+
+@keyframes btnShine {
+  0% { transform: translateX(-150%) rotate(45deg); }
+  25% { transform: translateX(150%) rotate(45deg); }
+  100% { transform: translateX(150%) rotate(45deg); }
+}
+
+/* ---------- 3D Card Effects ---------- */
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-1500 {
+  perspective: 1500px;
+}
+
+.perspective-2000 {
+  perspective: 2000px;
+}
+
+/* Backface hidden for 3D elements */
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* 3D Float Animation */
+@keyframes float3D {
+  0%, 100% {
+    transform: translateY(0) rotateX(0) rotateY(0);
+  }
+  25% {
+    transform: translateY(-10px) rotateX(2deg) rotateY(-3deg);
+  }
+  50% {
+    transform: translateY(-5px) rotateX(-1deg) rotateY(2deg);
+  }
+  75% {
+    transform: translateY(-15px) rotateX(3deg) rotateY(-1deg);
+  }
+}
+
+.animate-float-3d {
+  animation: float3D 6s ease-in-out infinite;
+}
+
+/* Glow effect for 3D elements */
+.glow-3d {
+  box-shadow:
+    0 0 20px rgba(197, 160, 89, 0.1),
+    0 0 40px rgba(197, 160, 89, 0.05),
+    0 0 60px rgba(197, 160, 89, 0.02);
+}
+
+/* ---------- Smooth Scrolling Enhancement ---------- */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ---------- Glass Morphism Utilities ---------- */
+.glass {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-dark {
+  background: rgba(28, 28, 27, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- Magnetic Button Effect ---------- */
+.magnetic-btn {
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.magnetic-btn:hover {
+  transition: transform 0.1s linear;
+}
+
+/* ---------- Text Gradient Animation ---------- */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.text-gradient-animate {
+  background: linear-gradient(90deg, #c5a059, #d4af37, #c5a059);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 3s ease infinite;
+}
+
+/* ---------- Border Glow Animation ---------- */
+@keyframes borderGlow {
+  0%, 100% {
+    border-color: rgba(197, 160, 89, 0.3);
+    box-shadow: 0 0 10px rgba(197, 160, 89, 0.1);
+  }
+  50% {
+    border-color: rgba(197, 160, 89, 0.6);
+    box-shadow: 0 0 20px rgba(197, 160, 89, 0.2);
+  }
+}
+
+.animate-border-glow {
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+/* ---------- Shimmer Effect ---------- */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* ---------- Scroll Reveal Utilities ---------- */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal-up.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---------- Section Transition ---------- */
+.section-enter {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.section-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
