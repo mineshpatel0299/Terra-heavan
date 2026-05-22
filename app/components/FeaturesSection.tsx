@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Compass, Home, Key, ShieldCheck } from "lucide-react";
 import Image from "next/image";
+import { GlowCard } from "@/components/ui/spotlight-card";
 
 const features = [
   {
@@ -14,6 +15,8 @@ const features = [
     Icon: Home,
     accent: "Thoughtfully selected",
     image: "/images/features/curated.png",
+    stat: "200+",
+    statLabel: "Properties",
   },
   {
     title: "Verified Listings",
@@ -22,6 +25,8 @@ const features = [
     Icon: ShieldCheck,
     accent: "100% authenticated",
     image: "/images/features/verified.png",
+    stat: "100%",
+    statLabel: "Authenticated",
   },
   {
     title: "End-to-End Support",
@@ -30,6 +35,8 @@ const features = [
     Icon: Key,
     accent: "Full lifecycle care",
     image: "/images/features/support.png",
+    stat: "24/7",
+    statLabel: "Concierge",
   },
   {
     title: "Neighbourhood Insights",
@@ -38,26 +45,25 @@ const features = [
     Icon: Compass,
     accent: "Data-informed living",
     image: "/images/features/neighborhood.png",
+    stat: "50+",
+    statLabel: "Locations",
   },
 ];
 
 export default function FeaturesSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    const cleanupFns: (() => void)[] = [];
 
     const ctx = gsap.context(() => {
-      // Premium Header Entrance
-      gsap.from(".header-line", {
-        y: 100,
+      // Header entrance
+      gsap.from(".feat-header-line", {
+        y: 80,
         opacity: 0,
-        rotationZ: 2,
+        rotationZ: 1.5,
         duration: 1.4,
         stagger: 0.15,
         ease: "power4.out",
@@ -67,301 +73,159 @@ export default function FeaturesSection() {
         },
       });
 
-      // Cards and Images entrance
-      cardRefs.current.forEach((card, index) => {
-        if (!card) return;
-        const imageWrapper = imageRefs.current[index];
-        if (!imageWrapper) return;
-
-        const imageContainer = imageWrapper.querySelector(".image-clip-container");
-        const image = imageWrapper.querySelector("img");
-        const badge = imageWrapper.querySelector(".feature-badge");
-        const contentElements = card.querySelectorAll(".content-elem");
-        const isEven = index % 2 === 0;
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: card,
-            start: "top 75%",
-            toggleActions: "play none none reverse",
-          },
-        });
-
-        // Advanced Image Reveal (Diagonal Clip Path)
-        if (imageContainer) {
-          gsap.set(imageContainer, { 
-            clipPath: isEven ? "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)" : "polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)" 
-          });
-        }
-        if (image) gsap.set(image, { scale: 1.5, transformOrigin: "center center" });
-        
-        if (imageContainer) {
-          tl.to(imageContainer, {
-            clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-            duration: 1.8,
-            ease: "expo.inOut",
-          });
-        }
-        
-        if (image) {
-          tl.to(image, {
-            scale: 1,
-            duration: 1.8,
-            ease: "power3.out",
-          }, "-=1.8");
-        }
-        
-        // Staggered text reveal
-        gsap.set(contentElements, { y: 40, opacity: 0 });
-        tl.to(contentElements, {
-          y: 0,
-          opacity: 1,
-          duration: 1.2,
-          stagger: 0.15,
-          ease: "expo.out",
-        }, "-=1.2");
-
-        // Line expansion
-        const line = card.querySelector(".content-line");
-        if (line) {
-          gsap.set(line, { scaleX: 0, transformOrigin: "left center" });
-          tl.to(line, {
-             scaleX: 1,
-             duration: 1.2,
-             ease: "power4.out"
-          }, "-=1.4");
-        }
-
-        // Badge bounce
-        if (badge) {
-          gsap.set(badge, { scale: 0, opacity: 0, rotation: -15 });
-          tl.to(badge, {
-            scale: 1,
-            opacity: 1,
-            rotation: 0,
-            duration: 1.2,
-            ease: "elastic.out(1, 0.5)",
-          }, "-=1.0");
-        }
-
-        // Parallax effect on scroll inside container
-        if (image) {
-          gsap.to(image, {
-            yPercent: 10,
-            ease: "none",
-            scrollTrigger: {
-              trigger: imageWrapper,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1.5,
-            },
-          });
-        }
+      // Cards staggered entrance
+      gsap.from(".feature-glow-card", {
+        y: 60,
+        opacity: 0,
+        duration: 1.2,
+        stagger: 0.2,
+        ease: "expo.out",
+        scrollTrigger: {
+          trigger: gridRef.current,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
       });
 
-      // 3D Hover Tilt Effect
-      imageRefs.current.forEach((wrapper) => {
-        if (!wrapper) return;
-        const container = wrapper.querySelector(".image-clip-container");
-        const image = wrapper.querySelector("img");
-        const badge = wrapper.querySelector(".feature-badge");
-        
-        const handleMouseMove = (e: MouseEvent) => {
-          const rect = wrapper.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          
-          const xPercent = (x / rect.width - 0.5) * 2;
-          const yPercent = (y / rect.height - 0.5) * 2;
-          
-          if (container) {
-            gsap.to(container, {
-              rotationY: xPercent * 6,
-              rotationX: -yPercent * 6,
-              duration: 0.8,
-              ease: "power2.out",
-              transformPerspective: 1000,
-            });
-          }
-          
-          if (image) {
-             gsap.to(image, {
-               x: xPercent * -10,
-               y: yPercent * -10,
-               scale: 1.05,
-               duration: 0.8,
-               ease: "power2.out"
-             });
-          }
-
-          if (badge) {
-             gsap.to(badge, {
-               x: xPercent * 20,
-               y: yPercent * 20,
-               z: 40,
-               duration: 0.8,
-               ease: "power2.out"
-             });
-          }
-        };
-        
-        const handleMouseLeave = () => {
-          if (container) {
-            gsap.to(container, {
-              rotationY: 0,
-              rotationX: 0,
-              duration: 1.5,
-              ease: "elastic.out(1, 0.4)",
-            });
-          }
-          if (image) {
-             gsap.to(image, {
-               x: 0,
-               y: 0,
-               scale: 1,
-               duration: 1.5,
-               ease: "elastic.out(1, 0.4)"
-             });
-          }
-          if (badge) {
-             gsap.to(badge, {
-               x: 0,
-               y: 0,
-               z: 0,
-               duration: 1.5,
-               ease: "elastic.out(1, 0.4)"
-             });
-          }
-        };
-
-        wrapper.addEventListener("mousemove", handleMouseMove);
-        wrapper.addEventListener("mouseleave", handleMouseLeave);
-        
-        cleanupFns.push(() => {
-          wrapper.removeEventListener("mousemove", handleMouseMove);
-          wrapper.removeEventListener("mouseleave", handleMouseLeave);
-        });
+      // Image scale reveal per card
+      gsap.from(".card-image", {
+        scale: 1.15,
+        duration: 1.6,
+        stagger: 0.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: gridRef.current,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
       });
     }, sectionRef);
 
-    return () => {
-      ctx.revert();
-      cleanupFns.forEach(fn => fn());
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!sectionRef.current) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      setMousePosition({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    return () => ctx.revert();
   }, []);
 
   return (
     <section
       ref={sectionRef}
       id="features"
-      className="relative overflow-hidden bg-[#faf9f6] py-32 px-6"
+      className="relative overflow-hidden bg-charcoal py-32 px-6"
     >
-      {/* Background Decorative Elements */}
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <div 
-          className="absolute h-[600px] w-[600px] rounded-full blur-[120px] transition-opacity duration-1000"
-          style={{
-            background: "radial-gradient(circle, rgba(197, 160, 89, 0.05) 0%, transparent 70%)",
-            left: `${mousePosition.x - 300}px`,
-            top: `${mousePosition.y - 300}px`,
-          }}
-        />
-      </div>
+      {/* Subtle grain overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")",
+        }}
+      />
+
+      {/* Clay ambient glow */}
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 h-[700px] w-[700px] rounded-full blur-[180px] opacity-[0.08] z-0"
+        style={{ background: "radial-gradient(circle, #c5a059 0%, transparent 70%)" }}
+      />
 
       <div className="relative mx-auto max-w-7xl z-10">
-        {/* Header Section */}
-        <div ref={headerRef} className="mb-24 text-center">
+        {/* Header */}
+        <div ref={headerRef} className="mb-20 text-center">
           <div className="mb-6 inline-flex items-center gap-3 overflow-hidden">
-            <div className="h-px w-8 bg-clay/40 header-line" />
-            <span className="font-dm text-[10px] uppercase tracking-[0.5em] text-clay header-line">
+            <div className="h-px w-8 bg-clay/50 feat-header-line" />
+            <span className="font-dm text-[10px] uppercase tracking-[0.5em] text-clay feat-header-line">
               The Experience
             </span>
-            <div className="h-px w-8 bg-clay/40 header-line" />
+            <div className="h-px w-8 bg-clay/50 feat-header-line" />
           </div>
-          <h2 className="font-cormorant text-[clamp(40px,5vw,72px)] font-light leading-[1.1] text-charcoal">
-            <div className="overflow-hidden pb-2"><div className="header-line">Refining the Art of</div></div>
-            <div className="overflow-hidden pb-2"><div className="header-line"><span className="italic text-clay">Modern Living</span></div></div>
+
+          <h2 className="font-cormorant text-[clamp(40px,5vw,72px)] font-light leading-[1.1] text-warm-white">
+            <div className="overflow-hidden pb-2">
+              <div className="feat-header-line">Refining the Art of <span className="italic text-clay">Modern Living</span></div>
+            </div>
+            <div className="overflow-hidden pb-2">
+              
+            </div>
           </h2>
+
+          <p className="feat-header-line mt-6 font-dm text-base text-stone/60 max-w-lg mx-auto leading-relaxed">
+            Four pillars that set a new standard in residential real estate — crafted for those who expect more.
+          </p>
         </div>
 
-        {/* Features Grid - Alternating Layout */}
-        <div className="space-y-32 md:space-y-48">
-          {features.map((feature, index) => (
-            <div
+        {/* 2×2 GlowCard Grid */}
+        <div
+          ref={gridRef}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8"
+        >
+          {features.map((feature) => (
+            <GlowCard
               key={feature.title}
-              className={`flex flex-col items-center gap-12 md:flex-row ${
-                index % 2 === 1 ? "md:flex-row-reverse" : ""
-              }`}
+              glowColor="orange"
+              customSize
+              className="feature-glow-card group w-full min-h-[420px] flex flex-col overflow-hidden cursor-pointer"
             >
-              {/* Image Tilt Wrapper */}
-              <div 
-                ref={(el) => { imageRefs.current[index] = el; }}
-                className="relative aspect-[4/5] w-full md:w-1/2 lg:w-3/5"
-                style={{ perspective: "1000px" }}
-              >
-                {/* Clip-path and Overflow container */}
-                <div className="image-clip-container relative h-full w-full overflow-hidden rounded-2xl shadow-2xl" style={{ transformStyle: "preserve-3d" }}>
-                  <div className="absolute inset-0 z-10 bg-black/5 transition-colors duration-500 hover:bg-black/0 pointer-events-none" />
-                  <Image
-                    src={feature.image}
-                    alt={feature.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                </div>
-                
-                {/* Floating Badge (outside overflow to pop out) */}
-                <div 
-                  className="feature-badge absolute bottom-8 left-8 z-20 flex items-center gap-3 rounded-full bg-white/10 backdrop-blur-md px-6 py-3 border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.1)]"
-                  style={{ transform: "translateZ(40px)" }}
-                >
-                  <feature.Icon className="h-5 w-5 text-white" strokeWidth={1.5} />
-                  <span className="font-dm text-[10px] uppercase tracking-widest text-white">
-                    {feature.accent}
-                  </span>
-                </div>
+              {/* Image layer */}
+              <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl">
+                <Image
+                  src={feature.image}
+                  alt={feature.title}
+                  fill
+                  className="card-image object-cover opacity-25 transition-opacity duration-700 group-hover:opacity-35"
+                  sizes="(max-width: 640px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/65 to-transparent" />
               </div>
 
-              {/* Content Container */}
-              <div 
-                ref={(el) => { cardRefs.current[index] = el; }}
-                className="flex w-full flex-col justify-center space-y-6 md:w-1/2 md:px-12 lg:w-2/5"
-              >
-                <div className="content-elem content-line h-1 w-12 bg-clay/30" />
-                <h3 className="content-elem font-cormorant text-[clamp(32px,3vw,48px)] font-light leading-tight text-charcoal">
-                  {feature.title}
-                </h3>
-                <p className="content-elem font-dm text-base leading-relaxed text-earth/70 lg:text-lg">
-                  {feature.description}
-                </p>
-                <button className="content-elem group mt-4 flex w-fit items-center gap-4 text-[10px] uppercase tracking-[0.3em] text-clay transition-colors hover:text-charcoal cursor-pointer">
-                  <span className="relative overflow-hidden inline-block pb-1">
-                    <span className="inline-block transition-transform duration-500 group-hover:-translate-y-[150%]">Explore Detail</span>
-                    <span className="absolute left-0 top-0 inline-block translate-y-[150%] transition-transform duration-500 group-hover:translate-y-0 text-charcoal font-medium">Explore Detail</span>
-                  </span>
-                  <div className="h-px w-6 bg-clay transition-all duration-500 group-hover:w-12 group-hover:bg-charcoal" />
-                </button>
+              {/* Content */}
+              <div className="relative z-10 flex flex-col justify-between h-full p-8 pt-10">
+                {/* Top — icon + stat */}
+                <div className="flex items-start justify-between">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-clay/10 border border-clay/20 backdrop-blur-sm">
+                    <feature.Icon className="h-5 w-5 text-clay" strokeWidth={1.5} />
+                  </div>
+
+                  <div className="text-right">
+                    <div className="font-cormorant text-3xl font-light text-clay leading-none">
+                      {feature.stat}
+                    </div>
+                    <div className="font-dm text-[9px] uppercase tracking-[0.3em] text-stone/50 mt-0.5">
+                      {feature.statLabel}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom — text block */}
+                <div className="space-y-3">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-clay/20 bg-clay/5 px-3 py-1">
+                    <div className="h-1 w-1 rounded-full bg-clay" />
+                    <span className="font-dm text-[9px] uppercase tracking-[0.35em] text-clay/80">
+                      {feature.accent}
+                    </span>
+                  </div>
+
+                  <h3 className="font-cormorant text-[clamp(26px,2.5vw,36px)] font-light leading-tight text-warm-white">
+                    {feature.title}
+                  </h3>
+
+                  <p className="font-dm text-sm leading-relaxed text-stone/60 max-w-xs">
+                    {feature.description}
+                  </p>
+
+                  <button className="group/btn mt-2 flex items-center gap-3 text-[9px] uppercase tracking-[0.3em] text-clay transition-colors hover:text-warm-white cursor-pointer">
+                    <span className="relative overflow-hidden inline-block pb-0.5">
+                      <span className="inline-block transition-transform duration-500 group-hover/btn:-translate-y-[150%]">
+                        Explore Detail
+                      </span>
+                      <span className="absolute left-0 top-0 inline-block translate-y-[150%] transition-transform duration-500 group-hover/btn:translate-y-0 text-warm-white font-medium">
+                        Explore Detail
+                      </span>
+                    </span>
+                    <div className="h-px w-5 bg-clay transition-all duration-500 group-hover/btn:w-10 group-hover/btn:bg-warm-white" />
+                  </button>
+                </div>
               </div>
-            </div>
+            </GlowCard>
           ))}
         </div>
       </div>
     </section>
   );
 }
-
