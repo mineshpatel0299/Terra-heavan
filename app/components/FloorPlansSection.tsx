@@ -94,7 +94,7 @@ export default function FloorPlansSection() {
     <section
       ref={sectionRef}
       id="floor-plans"
-      className="relative bg-sand-light py-32 overflow-hidden"
+      className="relative bg-charcoal py-32 overflow-hidden"
       style={{ perspective: "1500px" }}
     >
       {/* Holographic grid background */}
@@ -135,14 +135,14 @@ export default function FloorPlansSection() {
         {/* Header with text decode effect */}
         <div ref={headerRef} className="space-y-5 text-center mb-20">
           <div className="flex items-center justify-center gap-4">
-            <span className="h-px w-12 bg-gradient-to-r from-transparent to-clay/50" aria-hidden />
-            <p className="font-dm text-[10px] uppercase tracking-[0.6em] text-clay">
+            <span className="h-px w-12 bg-gradient-to-r from-transparent to-white" aria-hidden />
+            <p className="font-dm text-[10px] uppercase tracking-[0.6em] text-white">
               Floor Plans
             </p>
-            <span className="h-px w-12 bg-gradient-to-l from-transparent to-clay/50" aria-hidden />
+            <span className="h-px w-12 bg-gradient-to-l from-transparent to-white" aria-hidden />
           </div>
           <h2
-            className="font-cormorant text-[clamp(36px,5vw,68px)] font-light leading-tight text-charcoal"
+            className="font-cormorant text-[clamp(36px,5vw,68px)] font-light leading-tight text-white"
             style={{ transformStyle: "preserve-3d" }}
           >
             {headingText.split("").map((char, i) => (
@@ -155,14 +155,14 @@ export default function FloorPlansSection() {
                 }}
               >
                 {char === " " ? "\u00A0" : char === "S" && i > 10 ? (
-                  <em className="italic text-clay">{char}</em>
+                  <em className="italic text-zc">{char}</em>
                 ) : (
                   char
                 )}
               </span>
             ))}
           </h2>
-          <p className="mx-auto max-w-xl font-dm text-sm leading-relaxed text-earth/60">
+          <p className="mx-auto max-w-xl font-dm text-sm leading-relaxed text-white">
             Click and drag to explore our meticulously designed living spaces. Each layout is optimized for natural light and seamless flow.
           </p>
         </div>

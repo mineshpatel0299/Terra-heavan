@@ -165,7 +165,7 @@ export default function HeroSection() {
             <div className="hero-eyebrow flex items-center justify-center gap-5">
               <span className="h-px w-16 bg-gradient-to-r from-transparent to-clay/50" aria-hidden />
               <span className="font-dm text-[10px] font-medium uppercase tracking-[0.65em] text-clay">
-                Real Estate Redefined
+                Real Estate Redefined.
               </span>
               <span className="h-px w-16 bg-gradient-to-l from-transparent to-clay/50" aria-hidden />
             </div>

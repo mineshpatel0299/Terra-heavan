@@ -103,7 +103,7 @@ export default function StatsBar() {
     <section
       ref={sectionRef}
       id="about"
-      className="relative overflow-hidden bg-sand py-24 px-6"
+      className="relative overflow-hidden bg-clay  py-24 px-6"
       style={{ perspective: "1000px" }}
     >
       {/* Animated background lines */}
@@ -122,18 +122,18 @@ export default function StatsBar() {
       </div>
 
       {/* Top rule */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-clay/40 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-clay/40 to-transparent" />
 
       <div className="relative mx-auto max-w-6xl">
         {/* Section header */}
         <div className="mb-16 text-center">
           <div className="flex items-center justify-center gap-4">
-            <span className="h-px w-12 bg-clay/40" aria-hidden />
-            <p className="font-dm text-[10px] uppercase tracking-[0.6em] text-clay/70">
+            <span className="h-px w-12 bg-white" aria-hidden />
+            <p className="font-dm text-[10px] uppercase tracking-[0.6em] text-white">
               Our Track Record
             </p>
-            <span className="h-px w-12 bg-clay/40" aria-hidden />
+            <span className="h-px w-12 bg-white" aria-hidden />
           </div>
         </div>
 
@@ -155,7 +155,7 @@ export default function StatsBar() {
               >
                 {/* Front face */}
                 <div
-                  className="stat-face absolute inset-0 flex items-center justify-center font-cormorant text-[clamp(36px,5vw,56px)] font-light leading-none text-clay"
+                  className="stat-face absolute inset-0 flex items-center justify-center font-cormorant text-[clamp(36px,5vw,56px)] font-light leading-none text-white"
                   style={{
                     backfaceVisibility: "hidden",
                     textShadow: "0 0 30px rgba(197, 160, 89, 0.3)",
@@ -166,7 +166,7 @@ export default function StatsBar() {
 
                 {/* Back face */}
                 <div
-                  className="stat-face absolute inset-0 flex items-center justify-center font-cormorant text-[clamp(36px,5vw,56px)] font-light leading-none text-clay/30"
+                  className="stat-face absolute inset-0 flex items-center justify-center font-cormorant text-[clamp(36px,5vw,56px)] font-light leading-none text-white"
                   style={{
                     backfaceVisibility: "hidden",
                     transform: "rotateX(180deg)",
@@ -177,7 +177,7 @@ export default function StatsBar() {
 
                 {/* Top face */}
                 <div
-                  className="stat-face absolute inset-0 flex items-center justify-center font-cormorant text-[clamp(36px,5vw,56px)] font-light leading-none text-clay/50"
+                  className="stat-face absolute inset-0 flex items-center justify-center font-cormorant text-[clamp(36px,5vw,56px)] font-light leading-none text-white"
                   style={{
                     backfaceVisibility: "hidden",
                     transform: "rotateX(90deg) translateZ(48px)",
@@ -188,7 +188,7 @@ export default function StatsBar() {
 
                 {/* Bottom face */}
                 <div
-                  className="stat-face absolute inset-0 flex items-center justify-center font-cormorant text-[clamp(36px,5vw,56px)] font-light leading-none text-clay/50"
+                  className="stat-face absolute inset-0 flex items-center justify-center font-cormorant text-[clamp(36px,5vw,56px)] font-light leading-none text-white"
                   style={{
                     backfaceVisibility: "hidden",
                     transform: "rotateX(-90deg) translateZ(48px)",
@@ -207,7 +207,7 @@ export default function StatsBar() {
               </div>
 
               <div className="space-y-1">
-                <p className="font-dm text-[10px] uppercase tracking-[0.5em] text-earth/50">
+                <p className="font-dm text-[10px] uppercase tracking-[0.5em] text-white">
                   {label}
                 </p>
                 <div className="mx-auto h-px w-8 bg-clay/20" />
